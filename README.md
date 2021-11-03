@@ -1,6 +1,6 @@
-# RED4ext.Example using Visual Studio
+# Native Class RED4ext Example using Visual Studio
 
-An example of a RED4ext plugin using Visual Studio.
+Quick native class example. Redscript shows how to declare header & use it.
 
 ## Build instructions
 
