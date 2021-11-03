@@ -5,6 +5,7 @@
 struct MyCustomClass : RED4ext::IScriptable
 {
     RED4ext::CClass* GetNativeType();
+    //RED4ext::CFundamentalRTTITypeFloat GetNumber();
 };
 
 RED4ext::TTypedClass<MyCustomClass> cls("MyCustomClass");
@@ -12,6 +13,13 @@ RED4ext::TTypedClass<MyCustomClass> cls("MyCustomClass");
 RED4ext::CClass* MyCustomClass::GetNativeType()
 {
     return &cls;
+}
+
+void GetNumber(RED4ext::IScriptable* aContext, RED4ext::CStackFrame* aFrame, float* aOut, int64_t a4)
+{
+    MessageBox(nullptr, L"Test", L"Hello", MB_OK);
+    aFrame->code++; // skip ParamEnd
+    *aOut = 6.25;
 }
 
 RED4EXT_C_EXPORT void RED4EXT_CALL RegisterTypes()
@@ -25,6 +33,12 @@ RED4EXT_C_EXPORT void RED4EXT_CALL PostRegisterTypes()
    auto rtti = RED4ext::CRTTISystem::Get();
    auto scriptable = rtti->GetClass("IScriptable");
    cls.parent = scriptable;
+
+   RED4ext::CBaseFunction::Flags flags = { .isNative = true };
+   auto getNumber = RED4ext::CClassFunction::Create(&cls, "GetNumber", "GetNumber", &GetNumber);
+   getNumber->flags = flags;
+   getNumber->SetReturnType("Float");
+   cls.RegisterFunction(getNumber);
 }
 
 BOOL APIENTRY DllMain(HMODULE aModule, DWORD aReason, LPVOID aReserved)
